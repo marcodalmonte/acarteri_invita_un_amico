@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\PHPMailer;
+use Illuminate\Support\Facades\Log;
 
 class RegistrationController extends Controller
 {
@@ -23,29 +24,52 @@ class RegistrationController extends Controller
 		$prospect->surname = $request->post('surname');
 		$prospect->email = $request->post('email');
 		
-		DB::table('prospects')
+		// Check if the person has already been referred in the past
+		$query = DB::connection('mysql')
+				->table('prospects')
+				->select('name', 'surname', 'email')
+				->where('name',$prospect->name)
+				->where('surname',$prospect->surname)
+				->where('email',$prospect->email);
+		
+		$count = $query->count();
+		
+		// Already received a discount...cannot get another one
+		if ($count > 0) {
+			return redirect()->to('/')->with('error',trans('messages.discount_already_sent'));
+		}
+		
+		// This prospect is not in the database yet, let's add it
+		DB::connection('mysql')
+			->table('prospects')
 			->insert([
 				'name' => $prospect->name,
 				'surname' => $prospect->surname,
 				'email' => $prospect->email,
 			]);
 		
+		// The prospect has not provided the name of the referee
 		$referee = session()->get('referee');
 		
 		if ($referee == null) {
-			$errors = [ 'no_referee_provided' => 'messages.no_referee_provided' ];
-			
-			redirect()->to('/referee')->with('errors',$errors);
+			return redirect()->to('/')->with('error',trans('messages.no_referee_provided'));
 		}
 		
-		sendEmail($referee, 'referee');
-		sendEmail($prospect, 'prospect');
+		if (!sendEmail($referee, 'referee')) {
+			return redirect()->to('/')->with('error',trans('messages.issues_sending_discount_codes'));
+		}
+		
+		if (!sendEmail($prospect, 'prospect')) {
+			return redirect()->to('/')->with('error',trans('messages.issues_sending_discount_codes'));
+		}
+		
+		return redirect()->to('/')->with('sent_email',trans('messages.discount_codes_sent'));
 	}
 	
 	private function sendEmail($person, $email_type) {
 		$mail = new PHPMailer();
 		$mail->IsSMTP(); 
-		if('' != env('MAIL_ENCRYPTION')){
+		if ('' != trim(env('MAIL_ENCRYPTION'))){
 			$mail->SMTPSecure = env('MAIL_ENCRYPTION');
 			$mail->Port = env('MAIL_PORT');
 		}
@@ -65,7 +89,7 @@ class RegistrationController extends Controller
 		$mail->Subject = trans('messages.email_discount');
 		$mail->Body = '';
 		
-		if ($email_type != '') {
+		if ('' != trim($email_type)) {
 			$file_path = resource_path('views/templates/emails/' . $email_type . '.blade.php');
 			
 			if (file_exists($file_path)) {
@@ -80,7 +104,13 @@ class RegistrationController extends Controller
 
 		$mail->addAddress($person->email, $person->name . ' ' . $person->surname);
 		$mail->addCc(env('MAIL_FROM_ADDRESS'),env('MAIL_FROM_NAME'));
+		
+		$sent = $mail->Send();
+		
+		if (!$sent) {
+			Log::error('Cannot send email to ' . $person->email . ': activate PHPMailer debug to investigate');
+		}
 
-		return $mail->Send();
+		return $sent;
 	}
 }

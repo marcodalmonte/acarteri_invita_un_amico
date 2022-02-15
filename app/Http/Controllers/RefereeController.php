@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 
 class RefereeController extends Controller
 {
@@ -21,7 +20,8 @@ class RefereeController extends Controller
 		$name = $request->post('name');
 		$surname = $request->post('surname');
 		
-		$query = DB::table('wp_wc_customer_lookup')
+		$query = DB::connection('wp')
+				->table('wp_wc_customer_lookup')
 				->select('customer_id', 'first_name', 'last_name', 'email')
 				->where('first_name',$name)
 				->where('last_name',$surname)
@@ -34,11 +34,11 @@ class RefereeController extends Controller
 			
 			session()->put('referee',$referee);
 			
-			redirect('/registration');
+			return redirect()->to('registration');
 		}
 		
-		$errors = ['no_customer_found' => 'messages.no_customer_found'];
+		$error = trans('messages.no_customer_found',['name' => $name, 'surname' => $surname]);
 		
-		Redirect::back()->with('errors',$errors);
+		return redirect()->to('/')->with('error',$error);
 	}
 }
