@@ -1,66 +1,41 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## Description of the flow
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+<p align="left">The flow steps are the following:</p>
+1. A prospect is giving the name and surname of a referee, who should have previously done some purchase online in the connected e-commerce
+2. A check is done to verify the existence of this referee in a second database, relative to the e-commerce
+3. If the referee exists, the prospect is redirected to a second page where he/she will have to insert name, surname and email
+4. Both prospect and referee will receive an email containing a discount code, one for each
 
-## About Laravel
+## Structure of the app
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p align="left">In the app we have 2 controllers, one for the page of the referee (Step 1) and one for the page of the prospect (Step 2).</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### RefereeController
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<p align="left">It contains 2 methods:</p>
+<p align="left">**show():** it simply shows the view referee.blade.php</p>
+<p align="left">**verify(request):** it checks if the referee exists in the second database, and save it in session for later</p>
 
-## Learning Laravel
+### RegistrationController 
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+<p align="left">It contains 2 methods as well:</p>
+<p align="left">**show():**</p>
+- It checks if the prospect is laded in the page without giving a referee
+- If it has happened, he will be redirected to the homepage with an error message
+- If the referee is correctly in session, the new form for the prospect data will be shown
+it simply shows the view registration.blade.php
+<p align="left">**verify(request):**</p>
+- It validates the data of the prospect
+- It checks if the prospect is already in database: in that case he/she would have already received a discount code
+- If the prospect is already in database, there will be a redirection to the homepage with an error message
+- The prospect is added in database
+- The emails are sent to the prospect and to the referee with their discount codes
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Templates
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-- **[Romega Software](https://romegasoftware.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<p align="left">The templates included in the package are the following:</p>
+- **layout.blade.php:** it is the basic template for the pages, built with tailwind css, very simple pages at the moment
+- **referee.blade.php:** it is the template for the homepage, where to insert the information of the referee; it extends layout with a form
+- **registration.blade.php:** it is the template for the registration of the prospect; it extends layout as well with another form
+- **emails/referee.blade.php:** it is the template for the email to the referee
+- **emails/prospect.blade.php:** it is the template for the email to the prospect
