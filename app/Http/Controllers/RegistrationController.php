@@ -10,10 +10,17 @@ use Illuminate\Support\Facades\DB;
 class RegistrationController extends Controller
 {
     public function show() {
+		// The prospect has not provided the name of the referee
+		$referee = session()->get('referee');
+		
+		if ($referee == null) {
+			return redirect()->to('/')->with('error',trans('messages.no_referee_provided'));
+		}
+		
 		return view('registration');
 	}
 	
-	public function store(Request $request) {
+	public function store(Request $request) {		
 		$request->validate([
 			'name' => 'required',
 			'surname' => 'required',
@@ -51,12 +58,7 @@ class RegistrationController extends Controller
 				'updated_at' => new \DateTime(),
 			]);
 		
-		// The prospect has not provided the name of the referee
 		$referee = session()->get('referee');
-		
-		if ($referee == null) {
-			return redirect()->to('/')->with('error',trans('messages.no_referee_provided'));
-		}
 		
 		session()->remove('referee');
 		
