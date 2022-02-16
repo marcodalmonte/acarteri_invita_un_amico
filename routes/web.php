@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RefereeController;
+use App\Http\Controllers\RegistrationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [RefereeController::class, 'show']);
+
+Route::post('verify', [RefereeController::class, 'verify']);
+
+Route::get('registration', [RegistrationController::class, 'show']);
+
+Route::post('send-code', [RegistrationController::class, 'store']);
