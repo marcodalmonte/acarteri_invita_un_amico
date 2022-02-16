@@ -30,7 +30,12 @@ class RefereeController extends Controller
 		$count = $query->count();
 		
 		if ($count > 0) {
-			$referee = $query->limit(1)->get();
+			$found = $query->limit(1)->first();
+			
+			$referee = new \stdClass();
+			$referee->name = $found->first_name;
+			$referee->surname = $found->last_name;
+			$referee->email = $found->email;
 			
 			session()->put('referee',$referee);
 			

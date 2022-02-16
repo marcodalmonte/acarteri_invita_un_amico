@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\PHPMailer;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class RegistrationController extends Controller
 {
@@ -46,6 +47,8 @@ class RegistrationController extends Controller
 				'name' => $prospect->name,
 				'surname' => $prospect->surname,
 				'email' => $prospect->email,
+				'created_at' => new \DateTime(),
+				'updated_at' => new \DateTime(),
 			]);
 		
 		// The prospect has not provided the name of the referee
@@ -55,11 +58,13 @@ class RegistrationController extends Controller
 			return redirect()->to('/')->with('error',trans('messages.no_referee_provided'));
 		}
 		
-		if (!sendEmail($referee, 'referee')) {
+		session()->remove('referee');
+		
+		if (!$this->sendEmail($referee, 'referee')) {
 			return redirect()->to('/')->with('error',trans('messages.issues_sending_discount_codes'));
 		}
 		
-		if (!sendEmail($prospect, 'prospect')) {
+		if (!$this->sendEmail($prospect, 'prospect')) {
 			return redirect()->to('/')->with('error',trans('messages.issues_sending_discount_codes'));
 		}
 		
@@ -68,6 +73,7 @@ class RegistrationController extends Controller
 	
 	private function sendEmail($person, $email_type) {
 		$mail = new PHPMailer();
+		$mail->SMTPDebug = 2;
 		$mail->IsSMTP(); 
 		if ('' != trim(env('MAIL_ENCRYPTION'))){
 			$mail->SMTPSecure = env('MAIL_ENCRYPTION');
@@ -90,25 +96,24 @@ class RegistrationController extends Controller
 		$mail->Body = '';
 		
 		if ('' != trim($email_type)) {
-			$file_path = resource_path('views/templates/emails/' . $email_type . '.blade.php');
+			$file_path = resource_path('views/emails/' . $email_type . '.blade.php');
 			
 			if (file_exists($file_path)) {
 				$mail->Body = file_get_contents($file_path);				
-				$mail->Body = str_replace(':name',$person->name);
-				$mail->Body = str_replace(':surname',$person->surname);
+				$mail->Body = str_replace(':name',$person->name,$mail->Body);
+				$mail->Body = str_replace(':surname',$person->surname,$mail->Body);
 			}
 		}
 		
-		// la riga sotto serve per debug invio form
-		//$mail->SMTPDebug = 2;
-
 		$mail->addAddress($person->email, $person->name . ' ' . $person->surname);
 		$mail->addCc(env('MAIL_FROM_ADDRESS'),env('MAIL_FROM_NAME'));
 		
 		$sent = $mail->Send();
 		
-		if (!$sent) {
-			Log::error('Cannot send email to ' . $person->email . ': activate PHPMailer debug to investigate');
+		if ($sent) {
+			Log::info('Discount code successfully sent to ' . $person->email);
+		} else {
+			Log::error('Cannot send email to ' . $person->email . ': ' . $mail->ErrorInfo);
 		}
 
 		return $sent;

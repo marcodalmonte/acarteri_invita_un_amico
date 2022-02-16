@@ -23,11 +23,11 @@
 				
 				<div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
 				@if(session('error'))	
-					<div class="text-red-500 text-base">{{ session('error') }}</div>
+					<div class="text-red-500 text-base">{!! session('error') !!}</div>
 				@endisset
 					
 				@if(session('sent_email'))
-					<div class="text-green-500 text-base">{{ session('sent_email') }}</div>
+					<div class="text-green-500 text-base">{!! session('sent_email') !!}</div>
 				@endisset
 				</div>
 
