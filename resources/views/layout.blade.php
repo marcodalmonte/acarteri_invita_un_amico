@@ -7,38 +7,45 @@
         <title>{{ env('APP_NAME') }} - {{ __('messages.step') }} @yield('step_number')</title>
 
         <!-- Fonts -->
-        <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" />
-
-        <!-- Styles -->
-        <link type="text/css" rel="stylesheet" href="css/normalize.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600;700&display=swap" />
 
         <link type="text/css" rel="stylesheet" href="css/style.css" />
     </head>
-    <body class="antialiased">
-        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
-            <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
-                    <h3 class="text-2xl font-bold text-center">{{ __('messages.step') }} @yield('step_number')</h3>
-                </div>
-				
-				<div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
-				@if(session('error'))	
-					<div class="text-red-500 text-base">{!! session('error') !!}</div>
-				@endisset
+    <body>
+		<div class="container">
+			<div class="logo-container">
+				<img src="images/micronative-logo.png" class="logo" alt="MicroNative Logo" title="MicroNative Logo" />
+			</div>
+			
+			@if(session('error'))	
+			<div class="text-final-result text-bordered-red text-red">{!! session('error') !!}</div>
+			@endisset
 					
-				@if(session('sent_email'))
-					<div class="text-green-500 text-base">{!! session('sent_email') !!}</div>
-				@endisset
+			@if(session('sent_email'))
+			<div class="text-final-result text-bordered-green text-green">{!! session('sent_email') !!}</div>
+			@endisset
+			</div>
+
+			<div class="titolo">
+				<h3>{{ Str::of(__('messages.invite_a_friend'))->upper() }} - {{ Str::of(__('messages.step'))->upper() }} @yield('step_number')</h3>
+			</div>
+
+			@yield('referee_content')
+			
+			@yield('form_content')
+
+			<div class="footer titolo">
+				<div class="logo-container logo-container-light">
+					<img src="images/micronative-light.png" class="logo" alt="MicroNative Logo" title="MicroNative Logo" />
 				</div>
 
-                <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
-                    <div class="grid grid-cols-1 md:grid-cols-2">
-                        <div class="p-12">
-                            @yield('content')
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+				<div class="center">
+					&copy; 2022 Microrganismieffettivi.net - Via Monte Cricco 2B, 37014 Castelnuovo del Garda - Verona<br/>
+					P. Iva: 04840820239 - Privacy Policy
+				</div>
+			</div>
+		</div>
     </body>
 </html>

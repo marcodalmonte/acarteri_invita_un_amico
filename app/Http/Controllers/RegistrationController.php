@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\PHPMailer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\RegistrationPostRequest;
 
 class RegistrationController extends Controller
 {
@@ -20,12 +20,8 @@ class RegistrationController extends Controller
 		return view('registration');
 	}
 	
-	public function store(Request $request) {		
-		$request->validate([
-			'name' => 'required',
-			'surname' => 'required',
-			'email' => 'required|email',
-		]);
+	public function store(RegistrationPostRequest $request) {		
+		$request->validate($request->rules());
 		
 		$prospect = new \stdClass();
 		$prospect->name = $request->post('name');

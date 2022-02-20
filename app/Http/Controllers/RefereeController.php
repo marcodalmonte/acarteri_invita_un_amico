@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\RefereePostRequest;
 
 class RefereeController extends Controller
 {
@@ -11,11 +11,8 @@ class RefereeController extends Controller
 		return view('referee');
 	}
 	
-	public function verify(Request $request) {
-		$request->validate([
-			'name' => 'required',
-			'surname' => 'required',
-		]);
+	public function verify(RefereePostRequest $request) {
+		$request->validate($request->rules());
 		
 		$name = $request->post('name');
 		$surname = $request->post('surname');
@@ -44,6 +41,6 @@ class RefereeController extends Controller
 		
 		$error = trans('messages.no_customer_found',['name' => $name, 'surname' => $surname]);
 		
-		return redirect()->to('/')->with('error',$error);
+		return redirect()->to('/#referee-form')->with('error',$error);
 	}
 }
