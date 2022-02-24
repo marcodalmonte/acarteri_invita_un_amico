@@ -2,26 +2,45 @@
 
 @section('step_number','1')
 
-@section('content')
-    <form id="referee-form" name="referee-form" class="bg-white p-6 rounded shadow-md" action="verify" method="POST">
-		@csrf
+@section('referee_content')
+	<p class="testo">
+		Per te, che sei interessato ad entrare nel nostro fantastico Eco-Mondo,<br/>
+		Micronative ha piacere di farti un regalo di benvenuto.
+	</p>
+	<p class="testo">E non solo!</p>
+	<p class="testo">Anche la persona che ti ha parlato di noi riceverà il tuo stesso presente...</p>
 
-		<div class="mb-5">
-			<label for="name" class="block text-xs uppercase font-semibold mb-1">{{ __('messages.name') }}</label>
-			<input type="text" id="name" name="name" class="border px-2 py-1 text-sm w-full" value="" />
+	<img src="images/promo-micronative.jpg" class="micronative-promo" alt="{{ __('messages.promotion') }}" title="{{ __('messages.promotion') }}" />
+
+	<p class="testo">
+		Registrandoti in questa pagina, tu e l'amico che ti ha presentato riceverete subito<br/>
+		uno sconto del 15% valevole su tutti i prodotti MicroNative,<br/>
+		e con l'ordine che andrete ad effettuare una bottiglia di<br/>
+		MicroNative per la pulizia della casa da 250 ml. ed un<br/>
+		nebulizzatore da 500 ml. saranno in regalo!
+	</p>
+@endsection
+
+@section('form_content')
+	<div class="titolo form-titolo">
+		<h3>{{ __('messages.insert_friend_data') }}</h3>
+	</div>
+
+	<div class="form">
+		<form id="referee-form" name="referee-form" action="verify" method="POST">
+			@csrf
+
+			<input type="text" id="name" name="name" value="" placeholder="{{ __('messages.name') }}" @error('name')class="validation-error" @enderror/>
 			@error('name')
-			<div class="text-red-500 text-xs">{!! $message !!}</div>
+			<div class="validation-message text-red">{!! $message !!}</div>
 			@enderror
-		</div>
 
-		<div class="mb-5">
-			<label for="name" class="block text-xs uppercase font-semibold mb-1">{{ __('messages.surname') }}</label>
-			<input type="text" id="surname" name="surname" class="border px-2 py-1 text-sm w-full" value="" />
+			<input type="text" id="surname" name="surname" value="" placeholder="{{ __('messages.surname') }}" @error('surname')class="validation-error" @enderror/>
 			@error('surname')
-			<div class="text-red-500 text-xs">{!! $message !!}</div>
+			<div class="validation-message text-red">{!! $message !!}</div>
 			@enderror
-		</div>
 
-		<input type="submit" id="submit" name="submit" class="bg-blue-500 py-2 text-white rounded-full text-sm w-full" value="{{ __('messages.next') }}" />
-	</form>
+			<input type="submit" id="submit" name="submit" value="{{ __('messages.next') }}" />
+		</form>
+	</div>
 @endsection

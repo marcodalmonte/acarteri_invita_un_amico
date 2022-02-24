@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\PHPMailer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\RegistrationPostRequest;
 
 class RegistrationController extends Controller
 {
@@ -20,12 +20,8 @@ class RegistrationController extends Controller
 		return view('registration');
 	}
 	
-	public function store(Request $request) {		
-		$request->validate([
-			'name' => 'required',
-			'surname' => 'required',
-			'email' => 'required|email',
-		]);
+	public function store(RegistrationPostRequest $request) {		
+		$request->validate($request->rules());
 		
 		$prospect = new \stdClass();
 		$prospect->name = $request->post('name');
@@ -62,7 +58,7 @@ class RegistrationController extends Controller
 		
 		session()->remove('referee');
 		
-		if (!$this->sendEmail($referee, 'referee')) {
+		if (!$this->sendEmail($referee, 'referee', $prospect)) {
 			return redirect()->to('/')->with('error',trans('messages.issues_sending_discount_codes'));
 		}
 		
@@ -73,7 +69,7 @@ class RegistrationController extends Controller
 		return redirect()->to('/')->with('sent_email',trans('messages.discount_codes_sent'));
 	}
 	
-	private function sendEmail($person, $email_type) {
+	private function sendEmail($person, $email_type, $prospect = null) {
 		$mail = new PHPMailer();
 		$mail->SMTPDebug = 2;
 		$mail->IsSMTP(); 
@@ -101,9 +97,15 @@ class RegistrationController extends Controller
 			$file_path = resource_path('views/emails/' . $email_type . '.blade.php');
 			
 			if (file_exists($file_path)) {
-				$mail->Body = file_get_contents($file_path);				
+				$mail->Body = file_get_contents($file_path);
+				$mail->Body = str_replace('{APP_URL}',env('APP_URL'),$mail->Body);
 				$mail->Body = str_replace(':name',$person->name,$mail->Body);
 				$mail->Body = str_replace(':surname',$person->surname,$mail->Body);
+				
+				if ($prospect != null) {
+					$mail->Body = str_replace(':prospect_name',$prospect->name,$mail->Body);
+					$mail->Body = str_replace(':prospect_surname',$prospect->surname,$mail->Body);
+				}
 			}
 		}
 		
