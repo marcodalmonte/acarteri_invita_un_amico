@@ -62,9 +62,35 @@
 			.center {
 				text-align: center;
 			}
+			
+			.codice-promozionale {
+				font-size: 28px;
+				font-weight: bold;
+			}
 
 			.footer {
 				padding: 56px 0;
+			}
+		</style>
+		
+		<style type="text/css">
+			@media screen and (max-width: 649px) {
+				.container {
+					margin-bottom: 0;
+				}
+
+				.testo {
+					font-size: 15px;
+				}
+
+				.micronative-promo {
+					height: auto;
+					width: 75%;
+				}
+
+				.footer .center {
+					font-size: 12px;
+				}
 			}
 		</style>
     </head>
@@ -74,14 +100,14 @@
 				<img src="{APP_URL}/public/images/micronative-logo.png" class="logo" alt="MicroNative Logo" title="MicroNative Logo" />
 			</div>
 
-			<p class="testo">Grazie per esserti registrato/a sul nostro sito internet.</p>
-			<p class="testo">Ti comunichiamo con piacere il Codice Promozionale:</p>
-			<p class="testo">MICROGIFT</p>
-			<p class="testo">Digitalo dove c'è scitto &quot;inserisci codice promozionale&quot; nella sezione carrello,<br />
+			<p class="testo"><b>Grazie</b> per esserti registrato/a sul nostro sito internet.</p>
+			<p class="testo">Ti comunichiamo con piacere il <b>Codice Promozionale</b>:</p>
+			<p class="testo codice-promozionale">MICROGIFT</p>
+			<p class="testo">Digitalo dove c'è scritto &quot;<b>inserisci codice promozionale</b>&quot; nella sezione carrello,<br />
 			ti darà diritto a ricevere, con il tuo prossimo ordine,</p>
-			<p class="testo">uno sconto immediato del 15% su tutti i prodotti,</p>
-			<p class="testo">un nebulizzatore MicroNative da 500 ml,</p>
-			<p class="testo">e una bottiglia di MicroNative per la pulizia della casa da 250 ml.</p>
+			<p class="testo"><b>uno sconto immediato del 15% su tutti i prodotti</b>,</p>
+			<p class="testo"><b>un nebulizzatore MicroNative da 500 ml</b>,</p>
+			<p class="testo">e una bottiglia di <b>MicroNative per la pulizia della casa da 250 ml</b>.</p>
 			<p class="testo">Grazie e a presto, MicroNative.</p>
 			<img src="{APP_URL}/public/images/promo-micronative.jpg" class="micronative-promo" alt="Promo MicroNative" title="Promo MicroNative" />
 

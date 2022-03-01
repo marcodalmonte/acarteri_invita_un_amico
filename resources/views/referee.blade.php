@@ -5,19 +5,19 @@
 @section('referee_content')
 	<p class="testo">
 		Per te, che sei interessato ad entrare nel nostro fantastico Eco-Mondo,<br/>
-		Micronative ha piacere di farti un regalo di benvenuto.
+		<b>Micronative</b> ha piacere di farti <b>un regalo di benvenuto</b>.
 	</p>
-	<p class="testo">E non solo!</p>
-	<p class="testo">Anche la persona che ti ha parlato di noi riceverà il tuo stesso presente...</p>
+	<p class="testo"><b>E non solo!</b></p>
+	<p class="testo">Anche la persona che ti ha parlato di noi <b>riceverà il tuo stesso presente...</b></p>
 
 	<img src="images/promo-micronative.jpg" class="micronative-promo" alt="{{ __('messages.promotion') }}" title="{{ __('messages.promotion') }}" />
 
 	<p class="testo">
 		Registrandoti in questa pagina, tu e l'amico che ti ha presentato riceverete subito<br/>
-		uno sconto del 15% valevole su tutti i prodotti MicroNative,<br/>
-		e con l'ordine che andrete ad effettuare una bottiglia di<br/>
-		MicroNative per la pulizia della casa da 250 ml. ed un<br/>
-		nebulizzatore da 500 ml. saranno in regalo!
+		uno <b>sconto del 15%</b> valevole su tutti i prodotti MicroNative,<br/>
+		e con l'ordine che andrete ad effettuare una <b>bottiglia di<br/>
+		MicroNative per la pulizia della casa</b> da 250 ml. ed un<br/>
+		<b>nebulizzatore da 500 ml</b> saranno in regalo!
 	</p>
 @endsection
 

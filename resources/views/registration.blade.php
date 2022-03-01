@@ -26,7 +26,17 @@
 			<div class="validation-message text-red">{!! $message !!}</div>
 			@enderror
 
-			<input type="submit" id="submit" name="submit" value="{{ __('messages.send_code') }}" />
+			<div class="row">
+				<div class="privacy-div testo">
+					<input type="checkbox" id="privacy" name="privacy" value="1" />
+					{!! __('messages.privacy',['privacy' => 'https://www.microrganismieffettivi.net/privacy-policy/']) !!}
+					@error('privacy')
+					<div class="validation-message text-red">{!! $message !!}</div>
+					@enderror
+				</div>
+				
+				<input type="submit" id="submit" name="submit" value="{{ __('messages.send_code') }}" />
+			</div>
 		</form>
 	</div>
 @endsection
