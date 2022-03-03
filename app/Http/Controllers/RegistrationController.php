@@ -28,21 +28,6 @@ class RegistrationController extends Controller
 		$prospect->surname = $request->post('surname');
 		$prospect->email = $request->post('email');
 		
-		// Check if the person has already been referred in the past
-		$query = DB::connection('mysql')
-				->table('prospects')
-				->select('name', 'surname', 'email')
-				->where('name',$prospect->name)
-				->where('surname',$prospect->surname)
-				->where('email',$prospect->email);
-		
-		$count = $query->count();
-		
-		// Already received a discount...cannot get another one
-		if ($count > 0) {
-			return redirect()->to('/')->with('error',trans('messages.discount_already_sent'));
-		}
-		
 		// This prospect is not in the database yet, let's add it
 		DB::connection('mysql')
 			->table('prospects')

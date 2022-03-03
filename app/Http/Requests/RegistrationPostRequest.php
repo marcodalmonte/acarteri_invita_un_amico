@@ -27,6 +27,7 @@ class RegistrationPostRequest extends FormRequest
             'name' => 'required',
 			'surname' => 'required',
 			'email' => 'required|email',
+			'privacy' => 'required',
         ];
     }
 	
@@ -39,12 +40,14 @@ class RegistrationPostRequest extends FormRequest
 	{
 		$trans_required = trans('validation.required');
 		$trans_email = trans('validation.email');
+		$trans_privacy = trans('messages.acceptance_privacy');
 		
 		return [
 			'name.required' => str_replace(':attribute','"' . trans('messages.name') . '"',$trans_required),
 			'surname.required' => str_replace(':attribute','"' . trans('messages.surname') . '"',$trans_required),
 			'email.required' => str_replace(':attribute','"' . trans('messages.email') . '"',$trans_required),
 			'email.email' => str_replace(':attribute','"' . trans('messages.email') . '"',$trans_email),
+			'privacy.required' => $trans_privacy,
 		];
 	}
 }
